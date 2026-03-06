@@ -1,4 +1,13 @@
+---
+name: tdd
+description: Use this skill when writing code, fixing bugs, adding features, or refactoring. This skill enforces Test-Driven Development — write a failing test first, make it pass with the simplest code, then refactor. No production code without a failing test.
+---
+
 # Test-Driven Development
+
+## When This Skill Applies
+
+**Use this skill whenever you write or change code.** Every new feature, bug fix, and refactoring follows the TDD loop. No production code is written without a failing test driving it.
 
 ## The Core Loop
 
