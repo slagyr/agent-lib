@@ -18,9 +18,9 @@ Skills are declared in the project's `AGENTS.md` under a `## Skills` section. Ea
 ```markdown
 ## Skills
 
-This project uses [toolbox](https://raw.githubusercontent.com/slagyr/agent-skills/main/skills/toolbox/SKILL.md) to manage skills. If `.skills/` doesn't exist, fetch the toolbox SKILL.md from the URL above and follow its instructions.
+This project uses [toolbox](https://raw.githubusercontent.com/slagyr/agent-skills/main/toolbox/SKILL.md) to manage skills. If `.skills/` doesn't exist, fetch the toolbox SKILL.md from the URL above and follow its instructions.
 
-- [tdd](https://raw.githubusercontent.com/slagyr/agent-skills/main/skills/tdd/SKILL.md)
+- [tdd](https://raw.githubusercontent.com/slagyr/agent-skills/main/tdd/SKILL.md)
 - [braids](https://raw.githubusercontent.com/slagyr/braids/main/braids/SKILL.md)
 ```
 
@@ -60,12 +60,12 @@ The manifest tracks all cached skills, their source URLs, fetched files, and fre
   "freshness_hours": 24,
   "skills": {
     "toolbox": {
-      "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/skills/toolbox/SKILL.md",
+      "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/toolbox/SKILL.md",
       "fetched_at": "2026-03-06T12:00:00Z",
       "files": ["SKILL.md"]
     },
     "tdd": {
-      "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/skills/tdd/SKILL.md",
+      "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/tdd/SKILL.md",
       "fetched_at": "2026-03-06T12:00:00Z",
       "files": ["SKILL.md"]
     },
@@ -138,12 +138,12 @@ Fetch via HTTP GET. This is the primary use case for portable, published skills.
 
 For skills hosted on GitHub, use `raw.githubusercontent.com` URLs:
 ```
-https://raw.githubusercontent.com/{owner}/{repo}/{branch}/skills/{name}/SKILL.md
+https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{name}/SKILL.md
 ```
 
 To pin a specific version, use a commit SHA instead of a branch name:
 ```
-https://raw.githubusercontent.com/{owner}/{repo}/{sha}/skills/{name}/SKILL.md
+https://raw.githubusercontent.com/{owner}/{repo}/{sha}/{name}/SKILL.md
 ```
 
 ### `file://`
