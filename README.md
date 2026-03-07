@@ -40,4 +40,8 @@ See the [toolbox README](https://github.com/slagyr/toolbox) for full setup instr
 
 ## Available Commands
 
-*None yet.*
+| Command | Description |
+|---------|-------------|
+| [plan](commands/plan.md) | Planning mode using the beads issue tracker. Gathers context, discusses requirements, and creates beads. |
+| [todo](commands/todo.md) | Convert TODO comments in the code into beads. |
+| [work](commands/work.md) | Pick up the next ready bead and work on it. |
