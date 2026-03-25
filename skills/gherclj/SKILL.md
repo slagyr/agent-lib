@@ -34,7 +34,7 @@ When steps perform the action under test. No assertions needed.
 
 ### defthen — Assert results
 
-Then steps MUST assert using speclj matchers. A `defthen` that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
+Then steps MUST assert using `gherclj.core` assertion functions. A `defthen` that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
 
 ```clojure
 ;; WRONG — no assertion, silently passes
@@ -45,28 +45,25 @@ Then steps MUST assert using speclj matchers. A `defthen` that returns a value w
 ;; RIGHT — asserts the expected value
 (defthen check-status "the response status should be {status:int}"
   [status]
-  (should= status (g/get-in [:response :status])))
+  (g/should= status (g/get-in [:response :status])))
 ```
 
 ## Common Assertion Patterns
 
 ```clojure
 ;; Exact match
-(should= expected (g/get :key))
-
-;; String contains
-(should-contain substring (g/get :output))
+(g/should= expected (g/get :key))
 
 ;; Truthiness
-(should (g/get :key))
-(should-not (g/get :key))
+(g/should (g/get :key))
+(g/should-not (g/get :key))
 
 ;; Nil check
-(should-be-nil (g/get :key))
-(should-not-be-nil (g/get :key))
+(g/should-be-nil (g/get :key))
+(g/should-not-be-nil (g/get :key))
 
 ;; Collection
-(should= expected-vec (g/get :items))
+(g/should= expected-vec (g/get :items))
 ```
 
 ## Verification
@@ -85,14 +82,25 @@ After implementing steps, always run the feature specs and verify:
 40 examples, 0 failures, 0 assertions, 5 pending
 ```
 
+## Definition of Done
+
+A feature implementation bead is NOT complete until:
+
+1. **Step definition file exists** — `src/gherclj/features/steps/<feature>.clj`
+2. **All scenarios run** — Remove the `@wip` tag from the feature file
+3. **No pending scenarios** — Every scenario's step text matches a registered step
+4. **Assertions > 0** — Every `defthen` step asserts
+5. **All pass** — `bb features` shows 0 failures
+
+Do NOT close a bead if the feature file still has `@wip` or if scenarios are pending.
+
 ## State Management
 
 Steps use `gherclj.core` for state, aliased as `g`:
 
 ```clojure
 (ns myapp.features.steps.auth
-  (:require [gherclj.core :as g :refer [defgiven defwhen defthen]]
-            [speclj.core :refer :all]))
+  (:require [gherclj.core :as g :refer [defgiven defwhen defthen]]))
 ```
 
 - `g/assoc!`, `g/assoc-in!` — set state
