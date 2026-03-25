@@ -34,7 +34,9 @@ When steps perform the action under test. No assertions needed.
 
 ### defthen — Assert results
 
-Then steps MUST assert using `gherclj.core` assertion functions. A `defthen` that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
+Then steps MUST assert. A `defthen` that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
+
+If your project uses a single framework, you can use its native assertions directly (e.g., speclj's `should=`). Use `g/should=` when your steps need to be framework-agnostic — for example, when the project runs tests under both speclj and clojure.test.
 
 ```clojure
 ;; WRONG — no assertion, silently passes
