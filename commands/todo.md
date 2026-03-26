@@ -1,3 +1,9 @@
+---
+name: todo
+description: Convert TODO comments in the codebase into beads. Use when the user says "/todo" or asks to create beads from TODOs.
+user-invocable: true
+---
+
 # Create Beads from TODOs
 
 Convert TODO comments in the code into beads.

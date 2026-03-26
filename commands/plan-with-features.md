@@ -1,3 +1,9 @@
+---
+name: plan-with-features
+description: Plan work with Gherkin feature specification using gherclj. Use when the user says "/plan-with-features" or asks to plan with acceptance tests.
+user-invocable: true
+---
+
 # Plan with Features
 
 Extends the [/plan](plan.md) workflow with Gherkin feature specification using [gherclj](https://github.com/slagyr/gherclj).

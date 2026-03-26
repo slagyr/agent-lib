@@ -1,3 +1,9 @@
+---
+name: work
+description: Pick up the next ready bead and work on it. Use when the user says "/work" or asks to start working on the next task.
+user-invocable: true
+---
+
 # Work on Next Bead
 
 Pick up the next ready bead and work on it.
