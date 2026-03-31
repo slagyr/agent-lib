@@ -14,6 +14,8 @@ agent-lib/
 
 | Skill | Description |
 |-------|-------------|
+| [clojure](skills/clojure/SKILL.md) | Clojure coding conventions. Naming, formatting, function design, state management, threading, cross-platform patterns. |
+| [c3kit](skills/c3kit/SKILL.md) | Guide to the c3kit ecosystem (apron, bucket, wire, scaffold). Schemas, database API, web layer, app lifecycle. |
 | [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
 
 For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your boot file:
