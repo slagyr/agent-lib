@@ -21,9 +21,9 @@ Pick up the next ready bead and work on it.
 ## When Complete
 
 1. Ensure all unit tests/specs pass
-2. Ensure relevant feature scenarios pass and are not pending
-3. Do not close the bead if approved feature scenarios remain pending
-4. Do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it
+2. If the bead references approved feature scenarios, ensure those scenarios pass and are not pending
+3. If the bead references approved feature scenarios, do not close the bead while those scenarios remain pending
+4. If the bead references approved feature scenarios, do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it
 5. Only then run `bd close <id>` to mark the issue complete
 6. Run `bd sync` to sync changes
 7. Commit code changes with a descriptive message

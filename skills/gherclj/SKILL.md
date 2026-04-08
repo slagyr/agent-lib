@@ -9,6 +9,29 @@ description: Use this skill when implementing gherclj feature steps, working on 
 
 Use this skill whenever you are implementing step definitions for `.feature` files in a gherclj project. This includes any bead that references a feature file or involves writing `defgiven`, `defwhen`, or `defthen` steps.
 
+## Feature Contract Integrity
+
+Approved `.feature` files are behavioral contracts.
+
+- Do NOT semantically weaken, reinterpret, or rewrite approved scenarios without user approval.
+- Clarifying wording changes are fine only when they preserve the approved behavior exactly.
+- If implementation and approved feature text diverge, stop and raise the mismatch instead of changing the scenario to fit partial implementation.
+
+## Step Definitions Must Exercise Real Behavior
+
+Step definitions should test real product behavior through real code paths where feasible.
+
+- Prefer calling production entry points, public APIs, application services, or other real seams the product already exposes.
+- If a scenario needs a seam, prefer a real public seam or an explicitly approved test hook.
+- Do not move product logic into step definitions just because the implementation is missing.
+
+## Forbidden Acceptance-Test Shortcuts
+
+- Do NOT inject unimplemented product behavior directly in step definitions just to make scenarios pass.
+- Do NOT add acceptance-test-only shims that simulate promised behavior the product does not actually implement.
+- Passing feature scenarios must reflect actual implemented behavior, not test-only shortcuts.
+- A bead is not complete if the feature passes only because the steps fake missing behavior.
+
 ## Step Types and Their Responsibilities
 
 ### defgiven — Set up preconditions
@@ -74,7 +97,8 @@ After implementing steps, always run the feature specs and verify:
 
 1. **Assertion count > 0** — If you see `0 assertions`, your `defthen` steps are not asserting
 2. **No unexpected pending** — Pending scenarios mean step text isn't matching registered steps
-3. **Run:** `bb features` (or `bb test` for everything)
+3. **Real behavior is exercised** — Scenarios pass because the product implements the behavior, not because steps simulated it
+4. **Run:** `bb features` (or `bb test` for everything)
 
 ```
 # Good — assertions present
@@ -92,9 +116,10 @@ A feature implementation bead is NOT complete until:
 2. **All scenarios run** — Remove the `@wip` tag from the feature file
 3. **No pending scenarios** — Every scenario's step text matches a registered step
 4. **Assertions > 0** — Every `defthen` step asserts
-5. **All pass** — `bb features` shows 0 failures
+5. **No fake behavior in steps** — Step definitions are not simulating missing product behavior
+6. **All pass** — `bb features` shows 0 failures
 
-Do NOT close a bead if the feature file still has `@wip` or if scenarios are pending.
+Do NOT close a bead if the feature file still has `@wip`, if scenarios are pending, or if the feature only passes because the steps fake missing behavior.
 
 ## State Management
 
