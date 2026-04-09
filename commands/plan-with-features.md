@@ -38,6 +38,7 @@ Replace steps 5-7 from `/plan` with:
 ## Beads and Features
 
 - Every implementation bead should reference the feature file it implements
+- Include the `file:line` selector for each scenario the bead implements, so the implementer can run targeted scenarios with `gherclj` during development
 - One bead per feature file is typical, but large features may be split across beads
 - Infrastructure beads (parser changes, framework updates) may block feature implementation beads
 - Feature files are the spec; bead descriptions cover implementation approach
