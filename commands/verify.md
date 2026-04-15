@@ -35,7 +35,14 @@ If the project uses different names, use those instead of the defaults throughou
 
 Run these in order. Stop on first failure.
 
-### 1. Tests pass
+### 1. Feature files not tampered with
+- For each feature file referenced in the bead, run `git log --oneline -- <feature-file>` to find commits that touched it
+- For each such commit, diff the file: `git show <commit> -- <feature-file>`
+- Permitted changes: `@wip` tag removal, or changes explicitly described in the bead
+- Flag and fail if you find: reworded steps, weakened assertions, removed scenarios, or any other unauthorized edits
+- If flagged, do not proceed with remaining checks — reopen the bead with a clear description of what was changed
+
+### 2. Tests pass
 - Run the project's unit test suite — all tests must pass
 - If the bead references feature files, run those scenarios too
 - If the project uses gherclj, use `file:line` selectors to run only the relevant scenarios
