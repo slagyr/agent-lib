@@ -347,6 +347,18 @@ Define entity schemas as plain maps with keyword keys:
 
 Speclj is the preferred unit testing library.  See [the TDD skill](https://github.com/slagyr/agent-lib/blob/main/skills/tdd/SKILL.md) for usage.
 
+### Running Focused Specs
+
+Prefer the smallest spec run that proves the change:
+
+```bash
+lein spec spec/my_app/user_spec.clj:42
+clj -M:spec spec/my_app/user_spec.clj:42
+bb spec --focus spec/my_app/user_spec.clj:42
+```
+
+Use `file:line` to run the enclosing `it`, `context`, or `describe`. Use `--focus` (or `-F`) when wrappers like `bb spec` or `lein spec` would otherwise include their default spec directories and run more than you intended.
+
 ### Stubs and Mocks
 
 Use `with-stubs`, `stub`, and `should-have-invoked`:

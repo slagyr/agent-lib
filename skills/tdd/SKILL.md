@@ -131,6 +131,18 @@ Sometimes it helps to write AAA in reverse:
     (should= 90 total)))
 ```
 
+## Keep the Loop Tight
+
+During RED/GREEN, prefer running the smallest spec that covers the behavior you are changing:
+
+```bash
+lein spec spec/my_app/order_spec.clj:42
+clj -M:spec spec/my_app/order_spec.clj:42
+bb spec -F spec/my_app/order_spec.clj:42
+```
+
+Use `file:line` to target the nearest enclosing Speclj form. Prefer `--focus` or `-F` with wrapper commands when they would otherwise inject default spec directories and run the whole suite.
+
 ## Test Naming Principles
 
 - Use **behavior-driven names** with domain language
