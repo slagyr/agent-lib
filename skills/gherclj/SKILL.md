@@ -40,6 +40,7 @@ Given steps mutate state to establish preconditions. No assertions needed.
 
 ```clojure
 (defgiven create-user "a user \"{name}\""
+  "Creates a user map and stores it in state."
   [name]
   (g/assoc! :user {:name name}))
 ```
@@ -50,6 +51,7 @@ When steps perform the action under test. No assertions needed.
 
 ```clojure
 (defwhen user-logs-in "the user logs in"
+  "Authenticates the stored user and captures the response."
   []
   (let [user (g/get :user)]
     (g/assoc! :response (authenticate user))))
@@ -69,6 +71,7 @@ If your project uses a single framework, you can use its native assertions direc
 
 ;; RIGHT — asserts the expected value
 (defthen check-status "the response status should be {status:int}"
+  "Asserts the HTTP response status matches the expected value."
   [status]
   (g/should= status (g/get-in [:response :status])))
 ```
@@ -108,6 +111,18 @@ gherclj features/adventure/dragon_cave.feature \
 
 Feature paths and location selectors combine with normal options like `-f`, `-e`, `-o`, and tag filters.
 
+## Discovering and Auditing Steps
+
+```bash
+# List all registered steps organized by Given/When/Then, with phrase, source location, and docstring
+gherclj steps
+
+# Find steps unused by any feature file (respects tag filters)
+gherclj unused
+```
+
+Use `gherclj steps` to understand what steps already exist before writing new ones. Use `gherclj unused` during cleanup to find dead step definitions.
+
 ## Verification
 
 After implementing steps, always run the feature specs and verify:
@@ -129,7 +144,7 @@ After implementing steps, always run the feature specs and verify:
 
 A feature implementation bead is NOT complete until:
 
-1. **Step definition file exists** — `src/gherclj/features/steps/<feature>.clj`
+1. **Step definition file exists** — `spec/gherclj/features/steps/<feature>.clj`
 2. **All scenarios run** — Remove the `@wip` tag from the feature file
 3. **No pending scenarios** — Every scenario's step text matches a registered step
 4. **Assertions > 0** — Every `defthen` step asserts

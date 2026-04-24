@@ -45,7 +45,7 @@ Replace steps 5-7 from `/plan` with:
 
 ## Read First
 
-Before drafting features, study existing `.feature` files and step definitions to match the project's style. Understand what steps already exist before proposing new ones.
+Before drafting features, run `gherclj steps` to see all registered steps organized by Given/When/Then, with their phrases and source locations. This is the authoritative way to know what steps already exist — reuse them before proposing new ones. Also study existing `.feature` files to match the project's scenario style.
 
 ## Reminder
 
