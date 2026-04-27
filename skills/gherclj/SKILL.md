@@ -1,13 +1,13 @@
 ---
 name: gherclj
-description: Use this skill when implementing gherclj feature steps, working on beads that reference .feature files, or writing defgiven/defwhen/defthen definitions. Ensures step definitions follow gherclj conventions — especially that defthen steps assert results.
+description: Use this skill when implementing gherclj feature steps, working on beads that reference .feature files, or writing defgiven/defwhen/defthen definitions and their helpers. Ensures step definitions follow gherclj conventions — especially that defthen helpers assert results.
 ---
 
 # gherclj Step Implementation
 
 ## When This Skill Applies
 
-Use this skill whenever you are implementing step definitions for `.feature` files in a gherclj project. This includes any bead that references a feature file or involves writing `defgiven`, `defwhen`, or `defthen` steps.
+Use this skill whenever you are implementing step definitions for `.feature` files in a gherclj project. This includes any bead that references a feature file or involves writing `defgiven`, `defwhen`, or `defthen` steps and their helper functions.
 
 ## Feature Contract Integrity
 
@@ -19,61 +19,86 @@ Approved `.feature` files are behavioral contracts.
 
 ## Step Definitions Must Exercise Real Behavior
 
-Step definitions should test real product behavior through real code paths where feasible.
+Helper functions should test real product behavior through real code paths where feasible.
 
 - Prefer calling production entry points, public APIs, application services, or other real seams the product already exposes.
 - If a scenario needs a seam, prefer a real public seam or an explicitly approved test hook.
-- Do not move product logic into step definitions just because the implementation is missing.
+- Do not move product logic into helper functions just because the implementation is missing.
 
 ## Forbidden Acceptance-Test Shortcuts
 
-- Do NOT inject unimplemented product behavior directly in step definitions just to make scenarios pass.
+- Do NOT inject unimplemented product behavior directly in helper functions just to make scenarios pass.
 - Do NOT add acceptance-test-only shims that simulate promised behavior the product does not actually implement.
 - Passing feature scenarios must reflect actual implemented behavior, not test-only shortcuts.
-- A bead is not complete if the feature passes only because the steps fake missing behavior.
+- A bead is not complete if the feature passes only because the helpers fake missing behavior.
+
+## Architecture: Steps and Helpers
+
+Step definitions are pure routing — a phrase mapped to a helper function reference. All logic lives in a separate helpers namespace.
+
+```
+spec/<app>/features/steps/<feature>.clj   — phrase → helper routing
+spec/<app>/features/helpers/<feature>.clj — actual test logic
+```
+
+### Steps file — pure routing
+
+Use `helper!` to declare the helper namespace, then route each phrase to its helper function:
+
+```clojure
+(ns myapp.features.steps.auth
+  (:require [gherclj.core :refer [defgiven defwhen defthen helper!]]
+            [myapp.features.helpers.auth]))
+
+(helper! myapp.features.helpers.auth)
+
+(defgiven "a user {name:string} with role {role:string}" auth/create-user!)
+(defwhen  "the user logs in"                              auth/user-logs-in!)
+(defthen  "the response status should be {status:int}"   auth/response-status)
+```
+
+### Helpers file — logic and assertions
+
+```clojure
+(ns myapp.features.helpers.auth
+  (:require [gherclj.core :as g]
+            [myapp.auth :as app]))
+
+(defn create-user! [name role]
+  (g/assoc! :user {:name name :role role}))
+
+(defn user-logs-in! []
+  (let [{:keys [role]} (g/get :user)]
+    (g/assoc! :response (app/authenticate role))))
+
+(defn response-status [expected]
+  (g/should= expected (g/get-in [:response :status])))
+```
 
 ## Step Types and Their Responsibilities
 
 ### defgiven — Set up preconditions
 
-Given steps mutate state to establish preconditions. No assertions needed.
-
-```clojure
-(defgiven create-user "a user \"{name}\""
-  "Creates a user map and stores it in state."
-  [name]
-  (g/assoc! :user {:name name}))
-```
+Given helpers mutate state to establish preconditions. No assertions needed.
 
 ### defwhen — Perform actions
 
-When steps perform the action under test. No assertions needed.
-
-```clojure
-(defwhen user-logs-in "the user logs in"
-  "Authenticates the stored user and captures the response."
-  []
-  (let [user (g/get :user)]
-    (g/assoc! :response (authenticate user))))
-```
+When helpers perform the action under test. No assertions needed.
 
 ### defthen — Assert results
 
-Then steps MUST assert. A `defthen` that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
+Then helpers MUST assert. A `defthen` helper that returns a value without asserting is a bug — it produces 0 assertions and silently passes.
 
-If your project uses a single framework, you can use its native assertions directly (e.g., speclj's `should=`). Use `g/should=` when your steps need to be framework-agnostic — for example, when the project runs tests under both speclj and clojure.test.
+If your project uses a single framework, you can use its native assertions directly (e.g., speclj's `should=`). Use `g/should=` when helpers need to be framework-agnostic — for example, when the project runs tests under both speclj and clojure.test.
 
 ```clojure
 ;; WRONG — no assertion, silently passes
-(defthen check-status "the response status should be {status:int}"
-  [status]
+(defn response-status [expected]
   (g/get-in [:response :status]))
 
 ;; RIGHT — asserts the expected value
-(defthen check-status "the response status should be {status:int}"
-  "Asserts the HTTP response status matches the expected value."
-  [status]
-  (g/should= status (g/get-in [:response :status])))
+(defn response-status [expected]
+  (g/should= expected (g/get-in [:response :status])))
 ```
 
 ## Common Assertion Patterns
@@ -93,6 +118,17 @@ If your project uses a single framework, you can use its native assertions direc
 ;; Collection
 (g/should= expected-vec (g/get :items))
 ```
+
+## State Management
+
+Helpers use `gherclj.core` for state, aliased as `g`:
+
+- `g/assoc!`, `g/assoc-in!` — set state
+- `g/get`, `g/get-in` — read state
+- `g/update!`, `g/update-in!` — modify state
+- `g/swap!` — arbitrary state transformation
+- `g/dissoc!` — remove state
+- `g/reset!` — called automatically before each scenario
 
 ## Running Features and Scenarios
 
@@ -117,26 +153,34 @@ Feature paths and location selectors combine with normal options like `-f`, `-e`
 # List all registered steps organized by Given/When/Then, with phrase, source location, and docstring
 gherclj steps
 
+# Check whether a phrase matches a registered step (reports match/no-match/ambiguous, with arg bindings)
+gherclj match "the user logs in"
+
+# Detect phrases in feature files that match multiple registered steps
+gherclj ambiguity
+
 # Find steps unused by any feature file (respects tag filters)
 gherclj unused
 ```
 
-Use `gherclj steps` to understand what steps already exist before writing new ones. Use `gherclj unused` during cleanup to find dead step definitions.
+Use `gherclj steps` to understand what steps already exist before writing new ones. Use `gherclj match` to verify a phrase routes to the intended step. Use `gherclj ambiguity` as a pre-flight check before running. Use `gherclj unused` during cleanup to find dead step definitions.
+
+All four subcommands support `--json` and `--edn` for structured output.
 
 ## Verification
 
 After implementing steps, always run the feature specs and verify:
 
-1. **Assertion count > 0** — If you see `0 assertions`, your `defthen` steps are not asserting
+1. **Assertion count > 0** — If you see `0 assertions`, your `defthen` helpers are not asserting
 2. **No unexpected pending** — Pending scenarios mean step text isn't matching registered steps
-3. **Real behavior is exercised** — Scenarios pass because the product implements the behavior, not because steps simulated it
+3. **Real behavior is exercised** — Scenarios pass because the product implements the behavior, not because helpers simulated it
 4. **Run:** `bb features` (or `bb test` for everything)
 
 ```
 # Good — assertions present
 40 examples, 0 failures, 68 assertions, 5 pending
 
-# Bad — no assertions means defthen steps aren't asserting
+# Bad — no assertions means defthen helpers aren't asserting
 40 examples, 0 failures, 0 assertions, 5 pending
 ```
 
@@ -144,27 +188,12 @@ After implementing steps, always run the feature specs and verify:
 
 A feature implementation bead is NOT complete until:
 
-1. **Step definition file exists** — `spec/gherclj/features/steps/<feature>.clj`
-2. **All scenarios run** — Remove the `@wip` tag from the feature file
-3. **No pending scenarios** — Every scenario's step text matches a registered step
-4. **Assertions > 0** — Every `defthen` step asserts
-5. **No fake behavior in steps** — Step definitions are not simulating missing product behavior
-6. **All pass** — `bb features` shows 0 failures
+1. **Step definition file exists** — `spec/<app>/features/steps/<feature>.clj`
+2. **Helper file exists** — `spec/<app>/features/helpers/<feature>.clj`
+3. **All scenarios run** — Remove the `@wip` tag from the feature file
+4. **No pending scenarios** — Every scenario's step text matches a registered step
+5. **Assertions > 0** — Every `defthen` helper asserts
+6. **No fake behavior in helpers** — Helpers are not simulating missing product behavior
+7. **All pass** — `bb features` shows 0 failures
 
-Do NOT close a bead if the feature file still has `@wip`, if scenarios are pending, or if the feature only passes because the steps fake missing behavior.
-
-## State Management
-
-Steps use `gherclj.core` for state, aliased as `g`:
-
-```clojure
-(ns myapp.features.steps.auth
-  (:require [gherclj.core :as g :refer [defgiven defwhen defthen]]))
-```
-
-- `g/assoc!`, `g/assoc-in!` — set state
-- `g/get`, `g/get-in` — read state
-- `g/update!`, `g/update-in!` — modify state
-- `g/swap!` — arbitrary state transformation
-- `g/dissoc!` — remove state
-- `g/reset!` — called automatically before each scenario
+Do NOT close a bead if the feature file still has `@wip`, if scenarios are pending, or if the feature only passes because the helpers fake missing behavior.
