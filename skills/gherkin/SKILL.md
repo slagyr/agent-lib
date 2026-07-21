@@ -115,6 +115,30 @@ And the response should contain a session cookie
 But the response should not contain the password
 ```
 
+### Data lives in Given; one high-level When
+
+Don't spread input across multiple When steps. Move the data into a Given
+table and keep a single business-level action.
+
+```gherkin
+# BAD - field-by-field actions
+When they enter "https://example.com" as the URL
+And they enter "Example Website" as the title
+And they submit the bookmark
+
+# GOOD - data in Given, one action
+Given a bookmark to add:
+  | url   | https://example.com |
+  | title | Example Website     |
+When they add the bookmark
+```
+
+### Horizontal vs vertical tables
+
+Horizontal (header row) for multiple records; vertical (key/value pairs)
+for one record with several fields. A one-record horizontal table is a
+smell; a many-record vertical table is unreadable.
+
 ## When to Use What
 
 ### Background vs repeated Given steps
@@ -447,3 +471,14 @@ Then the response status should be 200
 - Name the file after the feature: `authentication.feature`, `checkout.feature`
 - Group related features in a directory: `features/`
 - Keep features close to the code they test
+
+## Checklist before finalizing
+
+- [ ] One behavior per scenario; names describe outcomes
+- [ ] Concrete example data (entertaining, never "test value 1")
+- [ ] Data in Given (tables for 2+ fields); one high-level When
+- [ ] Then steps assert observable results, specifically
+- [ ] Tables over narrative; request/response symmetry held
+- [ ] Protocol noise stripped, semantic anchors kept
+- [ ] Outlines only where data variation is the point
+- [ ] Descriptive feature file names (order-checkout.feature, not test1.feature)
