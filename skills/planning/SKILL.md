@@ -130,7 +130,7 @@ Plan approval can prune or add scenarios — that's the point; a vetoed title co
 Every scenario proposal is presented in exactly this shape — same session, every session, every agent. The reviewer should never re-learn the layout:
 
 ````
-<bean-id> — scenario <X> of <N>:
+<bean-id> — scenario <X> of <N> — <feature-file>:
 
 ```gherkin
 <the scenario, verbatim as it will land in the feature file>
@@ -149,6 +149,7 @@ Rules:
 
 - **The proposal is the whole message.** No preamble, no trailing options. When revising after feedback, one line above the block — `Revised: <what changed>` — and the header becomes `scenario <X> of <N> (rev 2)`.
 - **`X of N` tracks the approved scenario plan.** Same order, same count.
+- **The header names the destination feature file** (`features/`-relative, e.g. `admin/entities.feature`) — where-does-this-live is a standing reviewer question, so it's answered on line one, every time. Append `(new file)` when the file doesn't exist yet.
 - **The gherkin block is verbatim** — exactly what will be committed, fenced, including the `Scenario:` line. No placeholder tables.
 - **The step ledger is exhaustive and honest.** List only steps missing from the project's step registry, each with its one-line justification. When everything reuses existing steps, write `New steps invented: none` — the explicit "none" proves the ledger was checked, not skipped.
 - **Extra context earns its place.** A design consequence the reviewer must know before approving — nothing else. Omit if in doubt.
