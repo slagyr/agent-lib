@@ -52,5 +52,4 @@ For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your b
 - [todo](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/todo.md)
 - [work](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/work.md)
 - [verify](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/verify.md)
-- [harden](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/harden.md)
 ```
