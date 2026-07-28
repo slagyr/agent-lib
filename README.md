@@ -24,6 +24,7 @@ agent-lib/
 | [refactor](skills/refactor/SKILL.md) | Refactoring lessons. Extract method/namespace, rename, magic-number-to-constant, the discipline of rewiring callers immediately. |
 | [smells](skills/smells/SKILL.md) | Code smells. Dead code, unused bindings, duplication, magic numbers, long parameter lists, god namespaces, sleeping in tests, testing smells. |
 | [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
+| [hardening](skills/hardening/SKILL.md) | Project quality bars (coverage, later crap/mutation/duplication). Thresholds from `.hardening.edn`; skill holds defaults only. |
 
 For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your boot file:
 
@@ -41,6 +42,7 @@ For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your b
 | [todo](commands/todo.md) | Convert TODO comments in the code into beans. |
 | [work](commands/work.md) | Pick up the next ready bean and work on it. |
 | [verify](commands/verify.md) | Review beans tagged unverified by workers. Runs tests, checks acceptance criteria, removes the tag or reopens. |
+| [harden](commands/harden.md) | After verify: enforce `.hardening.edn` quality steps (coverage by default). Optional orchestration stage. |
 
 For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your boot file:
 
@@ -50,4 +52,5 @@ For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your b
 - [todo](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/todo.md)
 - [work](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/work.md)
 - [verify](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/verify.md)
+- [harden](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/harden.md)
 ```
