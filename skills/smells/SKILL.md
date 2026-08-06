@@ -1,6 +1,6 @@
 ---
 name: smells
-description: Use this skill when reviewing code or specs for code smells. Covers dead code, unused bindings, duplication, magic numbers, long parameter lists, god namespaces, sleeping in tests, exception ping-pong, and testing smells (bare assertions, table-driven examples, nested describe).
+description: Use this skill when reviewing code or specs for code smells. Covers dead code, unused bindings, duplication, magic numbers, long parameter lists, god namespaces, requiring-resolve as a cycle-breaker, sleeping in tests, exception ping-pong, and testing smells (bare assertions, table-driven examples, nested describe).
 ---
 
 # Code Smells
@@ -66,6 +66,14 @@ An opts map is better than positional args, but a map that threads through five 
 A namespace that everything depends on and that keeps growing. Common symptoms: 500+ lines, frequent merge conflicts, new features always need to touch it.
 
 The fix is usually extract class/namespace (see the [refactor](https://github.com/slagyr/agent-lib/blob/main/skills/refactor/SKILL.md) skill). Identify cohesive responsibilities and give each one a home.
+
+## `requiring-resolve` as a cycle-breaker
+
+`(requiring-resolve 'other.ns/fn)` (or a bare runtime `require`) used **to hide a circular dependency** is an anti-pattern.
+
+It conceals the real graph from humans and from dependency tools, delays failure until call time, and usually means a function or concern is in the wrong namespace. Fix the structure: move the function, invert the dependency, or extract a pure leaf that both sides can require.
+
+**Acceptable** (few and far between): intentional **lazy load** of an optional heavy backend; **reload/bootstrap** seams that re-resolve after source change; carefully justified test-harness isolation. Prefer a normal ns `:require` whenever the dependency is on the happy path.
 
 ## Sleeping in tests
 
