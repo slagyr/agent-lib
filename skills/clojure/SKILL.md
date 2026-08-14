@@ -367,9 +367,12 @@ Not all protocol methods need the `-` prefix. Use it when there's a public wrapp
 
 ### Multimethods
 
-Multimethods are the lightest way to decouple when dispatch is configuration. Prefer them over a `cond` on `:impl`.
+Multimethods are the lightest way to decouple when dispatch is configuration.
+They are typically the first measure; protocols come later when you need a
+holdable instance. Prefer a multimethod over a `cond` on `:impl`.
 
-Package shape — core as interface, convention `require`, no lying defaults, harness APIs in a separate ns — is the [multimethod-seams](../multimethod-seams/SKILL.md) skill.
+Package shape — core as interface, convention `require`, no lying defaults,
+harness APIs in a separate ns — is the [multimethod-seams](../multimethod-seams/SKILL.md) skill.
 
 When deftype/defrecords are needed at runtime, multimethods may be useful as factory methods.
 
