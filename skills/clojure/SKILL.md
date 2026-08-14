@@ -367,13 +367,9 @@ Not all protocol methods need the `-` prefix. Use it when there's a public wrapp
 
 ### Multimethods
 
-Mutltimethods offer the most light-weight option for decoupling code and should be preferred when dispatching based on configurations.  
+Multimethods are the lightest way to decouple when dispatch is configuration. Prefer them over a `cond` on `:impl`.
 
-```clojure
-(defmulti send-email! (-> config/active :email :service))
-(defmethod send-email! :ses [email] (comment "send through ses"))
-(defmethod send-email! :smtp [email] (comment "send through smtp"))
-```
+Package shape — core as interface, convention `require`, no lying defaults, harness APIs in a separate ns — is the [multimethod-seams](../multimethod-seams/SKILL.md) skill.
 
 When deftype/defrecords are needed at runtime, multimethods may be useful as factory methods.
 

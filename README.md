@@ -21,6 +21,7 @@ agent-lib/
 | [c3kit-schema](skills/c3kit-schema/SKILL.md) | Deep reference for c3kit.apron.schema. Four operations, spec anatomy, nested types, entity-level specs, error handling, silent-failure trap. |
 | [gherkin](skills/gherkin/SKILL.md) | Writing good Gherkin feature files. Scenario structure, step clarity, tag conventions, common traps. |
 | [logging](skills/logging/SKILL.md) | Structured logging discipline. Levels, event-keyword conventions (:domain/action), feature-test assertions on log entries. |
+| [multimethod-seams](skills/multimethod-seams/SKILL.md) | Decouple a Clojure package with multimethods: core as interface, convention-require impls, no lying defaults, split substitution sets. |
 | [refactor](skills/refactor/SKILL.md) | Refactoring lessons. Extract method/namespace, rename, magic-number-to-constant, the discipline of rewiring callers immediately. |
 | [smells](skills/smells/SKILL.md) | Code smells. Dead code, unused bindings, duplication, magic numbers, long parameter lists, god namespaces, sleeping in tests, testing smells. |
 | [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
